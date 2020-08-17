@@ -76,7 +76,7 @@ def list_socos(interface_addr=None) -> None:
     if interface_addr is None:
         try:
             interface_addr = get_ni_ip()
-            print(f"Fetched Network Interface IP: {interface_addr}")
+            print(f"\nFetched Network Interface IP: {interface_addr}\n")
         except:
             pass
     devs = soco.discover(interface_addr=interface_addr)
@@ -85,8 +85,6 @@ def list_socos(interface_addr=None) -> None:
         name = dev.player_name
         household_id = dev.household_id
         print(f"IP: {ip}, Name: {name}, Household ID {household_id}")
-        pl = dev.get_sonos_playlists()
-        print(pl)
 
 def pair_socos(l_ip, r_ip) -> None:
     l_soco = soco.SoCo(l_ip)
