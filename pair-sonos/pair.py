@@ -41,7 +41,7 @@ unpair_soap_action ="urn:schemas-upnp-org:service:DeviceProperties:1#RemoveBonde
 
 @click.group()
 def main_cli():
-    """The main CLI wrapper for the commands"""
+    """A CLI tool to pair and unpair Sonos devices"""
     pass
 
 def get_ni_ip() -> str:
@@ -68,6 +68,10 @@ def list_socos(interface_addr=None) -> None:
 @click.argument('master_ip')
 @click.argument('slave_ip')
 def pair_socos(master_ip, slave_ip) -> None:
+    """
+    Arguments to pass: - MASTER_IP, SLAVE_IP
+    """
+    
     l_soco = soco.SoCo(master_ip)
     r_soco = soco.SoCo(slave_ip)
 
@@ -89,6 +93,9 @@ def pair_socos(master_ip, slave_ip) -> None:
 @main_cli.command(name='unpair')
 @click.argument('master_ip')
 def unpair_socos(master_ip) -> None:
+    """
+    Arguments to pass: - MASTER_IP
+    """
     req_addr = request_address_format.format(master_ip)
     req_headers = {
         "Content-Type": "application/xml",
