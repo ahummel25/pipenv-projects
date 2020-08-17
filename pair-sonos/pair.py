@@ -1,6 +1,7 @@
-#!/usr/bin/python3
+#!/Users/andrewhummel/.local/share/virtualenvs/pair-sonos-2EeCbxFW/bin/python3
 
 from sys import argv
+import click
 import requests
 import socket
 import soco
@@ -38,40 +39,17 @@ unpair_payload_format = (
 pair_soap_action = "urn:schemas-upnp-org:service:DeviceProperties:1#AddBondedZones"
 unpair_soap_action ="urn:schemas-upnp-org:service:DeviceProperties:1#RemoveBondedZones"
 
+@click.group()
 def main_cli():
-    num_args = len(argv)
-
-    if num_args < 2:
-        print(usage_text)
-        return
-
-    cmd = argv[1]
-
-    if cmd == "list":
-        if num_args == 2:
-            list_socos()
-        elif num_args == 3:
-            list_socos(argv[2])
-        else:
-            print("invalid arguments")
-    elif cmd == "pair":
-        if num_args == 4:
-            pair_socos(argv[2], argv[3])
-        else:
-            print("invalid arguments")
-    elif cmd == "unpair":
-        if num_args == 3:
-            unpair_socos(argv[2])
-        else:
-            print("invalid arguments")
-    else:
-        print(usage_text)
+    """The main CLI wrapper for the commands"""
+    pass
 
 def get_ni_ip() -> str:
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect(('10.255.255.255', 1))
     return s.getsockname()[0]
 
+@main_cli.command(name='list')
 def list_socos(interface_addr=None) -> None:
     if interface_addr is None:
         try:
@@ -86,14 +64,17 @@ def list_socos(interface_addr=None) -> None:
         household_id = dev.household_id
         print(f"IP: {ip}, Name: {name}, Household ID {household_id}")
 
-def pair_socos(l_ip, r_ip) -> None:
-    l_soco = soco.SoCo(l_ip)
-    r_soco = soco.SoCo(r_ip)
+@main_cli.command(name='pair')
+@click.argument('master_ip')
+@click.argument('slave_ip')
+def pair_socos(master_ip, slave_ip) -> None:
+    l_soco = soco.SoCo(master_ip)
+    r_soco = soco.SoCo(slave_ip)
 
     l_uid = l_soco.uid
     r_uid = r_soco.uid
 
-    req_addr = request_address_format.format(l_ip)
+    req_addr = request_address_format.format(master_ip)
     req_headers = {
         "Content-Type": "application/xml",
         "SOAPAction": pair_soap_action,
@@ -105,7 +86,8 @@ def pair_socos(l_ip, r_ip) -> None:
     if response.status_code != 200:
         print("failed to pair")
 
-
+@main_cli.command(name='unpair')
+@click.argument('master_ip')
 def unpair_socos(master_ip) -> None:
     req_addr = request_address_format.format(master_ip)
     req_headers = {
