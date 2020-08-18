@@ -40,21 +40,22 @@ pair_soap_action = "urn:schemas-upnp-org:service:DeviceProperties:1#AddBondedZon
 unpair_soap_action ="urn:schemas-upnp-org:service:DeviceProperties:1#RemoveBondedZones"
 
 @click.group()
-def main_cli():
+def main_cli() -> None:
     """A CLI tool to pair and unpair Sonos devices"""
     pass
 
 def get_ni_ip() -> str:
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(('10.255.255.255', 1))
+    s.connect(("10.255.255.255", 1))
     return s.getsockname()[0]
 
-@main_cli.command(name='list')
+@main_cli.command(name="list")
 def list_socos(interface_addr=None) -> None:
+    """List Sonos devices on the network"""
     if interface_addr is None:
         try:
             interface_addr = get_ni_ip()
-            print(f"\nFetched Network Interface IP: {interface_addr}\n")
+            click.secho(f"\nFetched Network Interface IP: {interface_addr}\n", fg="cyan")
         except:
             pass
     devs = soco.discover(interface_addr=interface_addr)
@@ -62,11 +63,11 @@ def list_socos(interface_addr=None) -> None:
         ip = dev.ip_address
         name = dev.player_name
         household_id = dev.household_id
-        print(f"IP: {ip}, Name: {name}, Household ID {household_id}")
+        click.secho(f"IP: {ip}, Name: {name}, Household ID {household_id}\n", fg="cyan")
 
-@main_cli.command(name='pair')
-@click.argument('master_ip')
-@click.argument('slave_ip')
+@main_cli.command(name="pair")
+@click.argument("master_ip")
+@click.argument("slave_ip")
 def pair_socos(master_ip, slave_ip) -> None:
     """
     Arguments to pass: - MASTER_IP, SLAVE_IP
@@ -88,10 +89,10 @@ def pair_socos(master_ip, slave_ip) -> None:
     response = requests.post(req_addr, data=req_payload, headers=req_headers)
 
     if response.status_code != 200:
-        print("failed to pair")
+        click.secho("Failed to pair", fg="red")
 
-@main_cli.command(name='unpair')
-@click.argument('master_ip')
+@main_cli.command(name="unpair")
+@click.argument("master_ip")
 def unpair_socos(master_ip) -> None:
     """
     Arguments to pass: - MASTER_IP
@@ -106,7 +107,7 @@ def unpair_socos(master_ip) -> None:
     response = requests.post(req_addr, data=req_payload, headers=req_headers)
 
     if response.status_code != 200:
-        print("failed to unpair")
+        click.secho("Failed to unpair", fg="red")
 
 if __name__ == "__main__":
     main_cli()
