@@ -9,6 +9,7 @@ verify_ssl = true
 requests = "*"
 soco = "*"
 click = "*"
+click-aliases = "*"
 
 [requires]
 python_version = "3.8"

@@ -2,6 +2,7 @@
 
 from sys import argv
 import click
+from click_aliases import ClickAliasedGroup
 import requests
 import socket
 import soco
@@ -39,7 +40,7 @@ unpair_payload_format = (
 pair_soap_action = "urn:schemas-upnp-org:service:DeviceProperties:1#AddBondedZones"
 unpair_soap_action ="urn:schemas-upnp-org:service:DeviceProperties:1#RemoveBondedZones"
 
-@click.group()
+@click.group(cls=ClickAliasedGroup)
 def main_cli() -> None:
     """A CLI tool to pair and unpair Sonos devices"""
     pass
@@ -49,7 +50,7 @@ def get_ni_ip() -> str:
     s.connect(("10.255.255.255", 1))
     return s.getsockname()[0]
 
-@main_cli.command(name="list")
+@main_cli.command(aliases=["list", "ls"])
 def list_socos(interface_addr=None) -> None:
     """List Sonos devices on the network"""
     if interface_addr is None:
