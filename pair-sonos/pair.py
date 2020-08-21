@@ -40,7 +40,7 @@ unpair_payload_format = (
 pair_soap_action = "urn:schemas-upnp-org:service:DeviceProperties:1#AddBondedZones"
 unpair_soap_action ="urn:schemas-upnp-org:service:DeviceProperties:1#RemoveBondedZones"
 
-@click.group(cls=ClickAliasedGroup)
+@click.group(cls=ClickAliasedGroup, context_settings=dict(help_option_names=["-h", "--help"]))
 def main_cli() -> None:
     """A CLI tool to pair and unpair Sonos devices"""
     pass
