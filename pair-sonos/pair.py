@@ -1,4 +1,4 @@
-#!/usr/bin/env pipenv run python3
+#!/Users/andrewhummel/.local/share/virtualenvs/pair-sonos-2EeCbxFW/bin/python3
 
 from sys import argv
 import click
