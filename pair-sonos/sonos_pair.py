@@ -56,8 +56,12 @@ def get_ni_ip() -> str:
 
 
 @main_cli.command(aliases=["list", "ls"])
-def list_socos(interface_addr=None) -> None:
-    """List Sonos devices on the network"""
+@argument("interface_addr", required=False)
+def list_socos(interface_addr: str=None) -> None:
+    """
+	List Sonos devices on the network
+	Arguments to pass: - INTERFACE_ADDR (Not required)
+	"""
     start_time = perf_counter()
     if interface_addr is None:
         try:
@@ -80,7 +84,7 @@ def list_socos(interface_addr=None) -> None:
 @main_cli.command(name="pair")
 @argument("master_ip")
 @argument("slave_ip")
-def pair_socos(master_ip, slave_ip) -> None:
+def pair_socos(master_ip: str, slave_ip: str) -> None:
     """
     Arguments to pass: - MASTER_IP, SLAVE_IP
     """
@@ -106,7 +110,7 @@ def pair_socos(master_ip, slave_ip) -> None:
 
 @main_cli.command(name="unpair")
 @argument("master_ip")
-def unpair_socos(master_ip) -> None:
+def unpair_socos(master_ip: str) -> None:
     """
     Arguments to pass: - MASTER_IP
     """
