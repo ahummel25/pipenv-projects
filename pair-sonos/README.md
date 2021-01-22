@@ -11,6 +11,16 @@ To build a single binary executable file:
 pip3 install pyinstaller
 
 pyinstaller pair.py --name sonos-pair --onefile
+
+OR (faster binary version)
+
+pip3 install cx_Freeze
+
+python3 setup.py build
+
+cp build ~/bin
+
+Add build/exe... to PATH
 ```
 
 ## Prerequisites

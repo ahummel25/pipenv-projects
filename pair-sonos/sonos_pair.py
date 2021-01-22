@@ -1,12 +1,12 @@
 #!/Library/Frameworks/Python.framework/Versions/3.9/bin/python3
 
-import click
+from click import argument, group, secho
 from click_aliases import ClickAliasedGroup
-import requests
-import socket
-import soco
+from requests import post
+from socket import AF_INET, socket, SOCK_DGRAM
+from soco import discover as soco_discover, SoCo
 import sys
-import time
+from time import perf_counter
 from utils.xml import prettify_xml
 
 usage_text = """\
@@ -42,16 +42,15 @@ unpair_payload_format = (
 pair_soap_action = "urn:schemas-upnp-org:service:DeviceProperties:1#AddBondedZones"
 unpair_soap_action = "urn:schemas-upnp-org:service:DeviceProperties:1#RemoveBondedZones"
 
-@click.group(
-    cls=ClickAliasedGroup, context_settings=dict(help_option_names=["-h", "--help"])
-)
+
+@group(cls=ClickAliasedGroup, context_settings=dict(help_option_names=["-h", "--help"]))
 def main_cli() -> None:
     """A CLI tool to pair and unpair Sonos devices"""
     pass
 
 
 def get_ni_ip() -> str:
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s = socket(AF_INET, SOCK_DGRAM)
     s.connect(("10.255.255.255", 1))
     return s.getsockname()[0]
 
@@ -59,36 +58,34 @@ def get_ni_ip() -> str:
 @main_cli.command(aliases=["list", "ls"])
 def list_socos(interface_addr=None) -> None:
     """List Sonos devices on the network"""
-    start_time = time.perf_counter()
+    start_time = perf_counter()
     if interface_addr is None:
         try:
             interface_addr = get_ni_ip()
-            click.secho(
-                f"\nFetched Network Interface IP: {interface_addr}\n", fg="cyan"
-            )
+            secho(f"\nFetched Network Interface IP: {interface_addr}\n", fg="cyan")
         except:
             pass
-    devs = soco.discover(interface_addr=interface_addr)
+    devs = soco_discover(interface_addr=interface_addr)
     for dev in devs:
         d = dev.ip_address
         ip = dev.ip_address
         name = dev.player_name
         household_id = dev.household_id
-        click.secho(f"IP: {ip}, Name: {name}, Household ID {household_id}\n", fg="cyan")
-    end_time = time.perf_counter()
+        secho(f"IP: {ip}, Name: {name}, Household ID {household_id}\n", fg="cyan")
+    end_time = perf_counter()
     run_time = end_time - start_time
     print(f"Finished {sys._getframe().f_code.co_name} in {run_time:.2f} secs")
 
 
 @main_cli.command(name="pair")
-@click.argument("master_ip")
-@click.argument("slave_ip")
+@argument("master_ip")
+@argument("slave_ip")
 def pair_socos(master_ip, slave_ip) -> None:
     """
     Arguments to pass: - MASTER_IP, SLAVE_IP
     """
-    l_soco = soco.SoCo(master_ip)
-    r_soco = soco.SoCo(slave_ip)
+    l_soco = SoCo(master_ip)
+    r_soco = SoCo(slave_ip)
 
     l_uid = l_soco.uid
     r_uid = r_soco.uid
@@ -99,16 +96,16 @@ def pair_socos(master_ip, slave_ip) -> None:
         "SOAPAction": pair_soap_action,
     }
     req_payload = pair_payload_format.format(l_uid, r_uid)
-    response = requests.post(req_addr, data=req_payload, headers=req_headers)
+    response = post(req_addr, data=req_payload, headers=req_headers)
 
     if response.status_code != 200:
-        click.secho("Failed to pair", fg="red")
+        secho("Failed to pair", fg="red")
         xml_string = prettify_xml(response.text)
-        click.secho(xml_string, fg="red")
+        secho(xml_string, fg="red")
 
 
 @main_cli.command(name="unpair")
-@click.argument("master_ip")
+@argument("master_ip")
 def unpair_socos(master_ip) -> None:
     """
     Arguments to pass: - MASTER_IP
@@ -120,12 +117,12 @@ def unpair_socos(master_ip) -> None:
     }
     req_payload = unpair_payload_format
 
-    response = requests.post(req_addr, data=req_payload, headers=req_headers)
+    response = post(req_addr, data=req_payload, headers=req_headers)
 
     if response.status_code != 200:
-        click.secho("Failed to unpair", fg="red")
+        secho("Failed to unpair", fg="red")
         xml_string = prettify_xml(response.text)
-        click.secho(xml_string, fg="red")
+        secho(xml_string, fg="red")
 
 
 if __name__ == "__main__":
