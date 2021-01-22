@@ -6,8 +6,7 @@ The script uses [SoCo](https://github.com/SoCo/SoCo) to discover and find UID:s 
 Tested on Python 3.9
 
 To build a single binary executable file:
-
-```
+```python
 pip3 install pyinstaller
 
 pyinstaller pair.py --name sonos-pair --onefile
@@ -18,7 +17,7 @@ pip3 install cx_Freeze
 
 python3 setup.py build
 
-cp build ~/bin
+cp -r build ~/bin/
 
 Add build/exe... to PATH
 ```
@@ -27,7 +26,7 @@ Add build/exe... to PATH
 
 Make sure SoCo and Requests are installed. Use pip to install them:
 
-```
+```python
 pip install soco requests
 ```
 
@@ -36,24 +35,24 @@ Depending on your Python installation, you might have to change `pip` to `pip3`.
 ## Usage
 
 List devices:
-```
+```python
 python pair.py list
 ```
 
 If that doesn't work, the problem might be that SoCo needs to know the IP of your network interface. Try:
-```
+```python
 python pair.py list my_ip_goes_here
 ```
 
 Pair speakers:
-```
-python pair.py pair ip_of_master ip_of_slave
+```python
+python pair.py pair master_ip slave_ip
 ```
 
 The **master** will act as the **left** speaker.
 
 Unpair speakers:
-```
+```python
 python pair.py unpair ip_of_master
 ```
 
