@@ -3,7 +3,15 @@ A simple python script that stereo pairs Sonos speakers. Nothing more, nothing l
 
 The script uses [SoCo](https://github.com/SoCo/SoCo) to discover and find UID:s of Sonos devices.
 
-Tested on Python 3.6.5.
+Tested on Python 3.9
+
+To build a single binary executable file:
+
+```
+pip3 install pyinstaller
+
+pyinstaller pair.py --name sonos-pair --onefile
+```
 
 ## Prerequisites
 

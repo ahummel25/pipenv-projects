@@ -9,6 +9,7 @@ import soco
 import sys
 import time
 import xml.dom.minidom
+from utils.xml import prettify_xml
 
 usage_text = """\
 commands:
@@ -42,11 +43,6 @@ unpair_payload_format = (
 
 pair_soap_action = "urn:schemas-upnp-org:service:DeviceProperties:1#AddBondedZones"
 unpair_soap_action = "urn:schemas-upnp-org:service:DeviceProperties:1#RemoveBondedZones"
-
-def prettify_xml(xml_string) -> str:
-    """Prettify XML"""
-    dom = xml.dom.minidom.parseString(xml_string)
-    return dom.toprettyxml()
 
 @click.group(
     cls=ClickAliasedGroup, context_settings=dict(help_option_names=["-h", "--help"])
