@@ -94,20 +94,18 @@ def pair_socos(master_ip, slave_ip) -> None:
     """
     Arguments to pass: - MASTER_IP, SLAVE_IP
     """
-
-    print("HEREEEE")
     l_soco = soco.SoCo(master_ip)
-    #r_soco = soco.SoCo(slave_ip)
+    r_soco = soco.SoCo(slave_ip)
 
     l_uid = l_soco.uid
-    #r_uid = r_soco.uid
+    r_uid = r_soco.uid
 
     req_addr = request_address_format.format(master_ip)
     req_headers = {
         "Content-Type": "application/xml",
         "SOAPAction": pair_soap_action,
     }
-    req_payload = pair_payload_format.format(l_uid, 123)
+    req_payload = pair_payload_format.format(l_uid, r_uid)
     response = requests.post(req_addr, data=req_payload, headers=req_headers)
 
     if response.status_code != 200:
