@@ -3,9 +3,13 @@
 from sys import argv
 import click
 from click_aliases import ClickAliasedGroup
+import json
 import requests
 import socket
 import soco
+import sys
+import time
+import xml.dom.minidom
 
 usage_text = """\
 commands:
@@ -40,6 +44,10 @@ unpair_payload_format = (
 pair_soap_action = "urn:schemas-upnp-org:service:DeviceProperties:1#AddBondedZones"
 unpair_soap_action = "urn:schemas-upnp-org:service:DeviceProperties:1#RemoveBondedZones"
 
+def prettify_xml(xml_string) -> str:
+    """Prettify XML"""
+    dom = xml.dom.minidom.parseString(xml_string)
+    return dom.toprettyxml()
 
 @click.group(
     cls=ClickAliasedGroup, context_settings=dict(help_option_names=["-h", "--help"])
@@ -58,6 +66,7 @@ def get_ni_ip() -> str:
 @main_cli.command(aliases=["list", "ls"])
 def list_socos(interface_addr=None) -> None:
     """List Sonos devices on the network"""
+    start_time = time.perf_counter()
     if interface_addr is None:
         try:
             interface_addr = get_ni_ip()
@@ -73,6 +82,9 @@ def list_socos(interface_addr=None) -> None:
         name = dev.player_name
         household_id = dev.household_id
         click.secho(f"IP: {ip}, Name: {name}, Household ID {household_id}\n", fg="cyan")
+    end_time = time.perf_counter()
+    run_time = end_time - start_time
+    print(f"Finished {sys._getframe().f_code.co_name} in {run_time:.4f} secs")
 
 
 @main_cli.command(name="pair")
@@ -83,23 +95,25 @@ def pair_socos(master_ip, slave_ip) -> None:
     Arguments to pass: - MASTER_IP, SLAVE_IP
     """
 
+    print("HEREEEE")
     l_soco = soco.SoCo(master_ip)
-    r_soco = soco.SoCo(slave_ip)
+    #r_soco = soco.SoCo(slave_ip)
 
     l_uid = l_soco.uid
-    r_uid = r_soco.uid
+    #r_uid = r_soco.uid
 
     req_addr = request_address_format.format(master_ip)
     req_headers = {
         "Content-Type": "application/xml",
         "SOAPAction": pair_soap_action,
     }
-    req_payload = pair_payload_format.format(l_uid, r_uid)
-
+    req_payload = pair_payload_format.format(l_uid, 123)
     response = requests.post(req_addr, data=req_payload, headers=req_headers)
 
     if response.status_code != 200:
         click.secho("Failed to pair", fg="red")
+        xml_string = prettify_xml(response.text)
+        click.secho(xml_string, fg="red")
 
 
 @main_cli.command(name="unpair")
@@ -119,6 +133,8 @@ def unpair_socos(master_ip) -> None:
 
     if response.status_code != 200:
         click.secho("Failed to unpair", fg="red")
+        xml_string = prettify_xml(response.text)
+        click.secho(xml_string, fg="red")
 
 
 if __name__ == "__main__":
