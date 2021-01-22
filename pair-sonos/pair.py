@@ -1,6 +1,5 @@
 #!/Library/Frameworks/Python.framework/Versions/3.9/bin/python3
 
-from sys import argv
 import click
 from click_aliases import ClickAliasedGroup
 import requests
@@ -8,7 +7,6 @@ import socket
 import soco
 import sys
 import time
-import xml.dom.minidom
 from utils.xml import prettify_xml
 
 usage_text = """\
@@ -79,7 +77,7 @@ def list_socos(interface_addr=None) -> None:
         click.secho(f"IP: {ip}, Name: {name}, Household ID {household_id}\n", fg="cyan")
     end_time = time.perf_counter()
     run_time = end_time - start_time
-    print(f"Finished {sys._getframe().f_code.co_name} in {run_time:.4f} secs")
+    print(f"Finished {sys._getframe().f_code.co_name} in {run_time:.2f} secs")
 
 
 @main_cli.command(name="pair")
