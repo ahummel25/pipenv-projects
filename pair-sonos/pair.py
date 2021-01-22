@@ -3,7 +3,6 @@
 from sys import argv
 import click
 from click_aliases import ClickAliasedGroup
-import json
 import requests
 import socket
 import soco
