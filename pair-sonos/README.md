@@ -15,9 +15,9 @@ OR (faster binary version)
 
 pip3 install cx_Freeze
 
-python3 setup.py build
+python3 setup.py build --build-base=sonos-pair
 
-cp -r build ~/bin/
+cp -r sonos-pair ~/bin/
 
 Add build/exe... to PATH
 ```
