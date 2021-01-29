@@ -57,11 +57,11 @@ def get_ni_ip() -> str:
 
 @main_cli.command(aliases=["list", "ls"])
 @argument("interface_addr", required=False)
-def list_socos(interface_addr: str=None) -> None:
+def list_socos(interface_addr: str = None) -> None:
     """
-	List Sonos devices on the network
-	Arguments to pass: - INTERFACE_ADDR (Not required)
-	"""
+    List Sonos devices on the network
+    Arguments to pass: - INTERFACE_ADDR (Not required)
+    """
     start_time = perf_counter()
     if interface_addr is None:
         try:
