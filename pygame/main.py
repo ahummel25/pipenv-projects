@@ -84,6 +84,8 @@ def init() -> None:
 
     # create the screen
     screen = pygame.display.set_mode((800, 600))
+    pygame.display.init()
+    pygame.display.toggle_fullscreen()
 
     # Background
     background_icon = find_data_file("background.png")
@@ -147,7 +149,7 @@ def init() -> None:
 
 
 def show_score(x: int, y: int) -> None:
-    score = font.render("Score : " + str(score_value), True, (255, 255, 255))
+    score = font.render(f"Score : {str(score_value)}", True, (255, 255, 255))
     screen.blit(score, (x, y))
 
 
