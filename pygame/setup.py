@@ -8,7 +8,7 @@ build_exe_options = dict(
 )
 bdist_mac_options = dict(
     iconfile="space_invaders.icns",
-    bundle_name="space_invaders",
+    bundle_name="Space Invaders",
 )
 
 # GUI applications require a different base on Windows (the default is for a

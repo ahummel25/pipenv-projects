@@ -82,9 +82,6 @@ def init():
     global textX
     global testY
 
-    # Intialize the pygame
-    pygame.init()
-
     # create the screen
     screen = pygame.display.set_mode((800, 600))
 
@@ -287,5 +284,6 @@ def start_game():
                 if event.key == pygame.K_RETURN:
                     running = False
                     start_game()
+
 
 start_game()
