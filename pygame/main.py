@@ -58,7 +58,7 @@ testY = 10
 over_font = pygame.font.Font("freesansbold.ttf", 64)
 
 
-def init():
+def init() -> None:
     global background
     global bulletImg
     global bullet_state
@@ -146,31 +146,31 @@ def init():
     testY = 10
 
 
-def show_score(x, y):
+def show_score(x: int, y: int) -> None:
     score = font.render("Score : " + str(score_value), True, (255, 255, 255))
     screen.blit(score, (x, y))
 
 
-def game_over_text():
+def game_over_text() -> None:
     over_text = over_font.render("GAME OVER", True, (255, 255, 255))
     screen.blit(over_text, (200, 250))
 
 
-def player(x, y):
+def player(x: int, y: int) -> None:
     screen.blit(playerImg, (x, y))
 
 
-def enemy(x, y, i):
+def enemy(x: int, y: int, i: int) -> None:
     screen.blit(enemyImg[i], (x, y))
 
 
-def fire_bullet(x, y):
+def fire_bullet(x: int, y: int) -> None:
     global bullet_state
     bullet_state = "fire"
     screen.blit(bulletImg, (x + 16, y + 10))
 
 
-def isCollision(enemyX, enemyY, bulletX, bulletY):
+def isCollision(enemyX: int, enemyY: int, bulletX: int, bulletY: int) -> bool:
     distance = math.sqrt(
         math.pow(enemyX - bulletX, 2) + (math.pow(enemyY - bulletY, 2))
     )
@@ -180,7 +180,7 @@ def isCollision(enemyX, enemyY, bulletX, bulletY):
         return False
 
 
-def start_game():
+def start_game() -> None:
     init()
 
     global bullet_state
