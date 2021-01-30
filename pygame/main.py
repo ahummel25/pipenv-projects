@@ -1,8 +1,12 @@
 import math
+import os
 import random
+import sys
 
 import pygame
 from pygame import mixer
+
+from utils.files import find_data_file
 
 # Intialize the pygame
 pygame.init()
@@ -13,12 +17,8 @@ screen = ""
 # Background
 background = ""
 
-# Sound
-mixer.music.load("background.wav")
-mixer.music.play(-1)
-
 # Caption and Icon
-pygame.display.set_caption("Space Invader")
+pygame.display.set_caption("Space Invaders")
 
 # Player
 playerImg = ""
@@ -72,7 +72,6 @@ def init():
     global enemyY
     global enemyY_change
     global font
-    global icon
     global num_of_enemies
     global playerX
     global playerImg
@@ -90,19 +89,23 @@ def init():
     screen = pygame.display.set_mode((800, 600))
 
     # Background
-    background = pygame.image.load("background.png")
+    background_icon = find_data_file("background.png")
+    background = pygame.image.load(background_icon)
 
     # Sound
-    mixer.music.load("background.wav")
+    background_music = find_data_file("background.wav")
+    mixer.music.load(background_music)
     mixer.music.play(-1)
 
     # Caption and Icon
     pygame.display.set_caption("Space Invader")
-    icon = pygame.image.load("ufo.png")
+    ufo_icon = find_data_file("ufo.png")
+    icon = pygame.image.load(ufo_icon)
     pygame.display.set_icon(icon)
 
     # Player
-    playerImg = pygame.image.load("player.png")
+    player_icon = find_data_file("player.png")
+    playerImg = pygame.image.load(player_icon)
     playerX = 370
     playerY = 480
     playerX_change = 0
@@ -115,8 +118,10 @@ def init():
     enemyY_change = []
     num_of_enemies = 6
 
+    enemy_icon = find_data_file("enemy.png")
+
     for i in range(num_of_enemies):
-        enemyImg.append(pygame.image.load("enemy.png"))
+        enemyImg.append(pygame.image.load(enemy_icon))
         enemyX.append(random.randint(0, 736))
         enemyY.append(random.randint(50, 150))
         enemyX_change.append(4)
@@ -127,7 +132,8 @@ def init():
     # Ready - You can't see the bullet on the screen
     # Fire - The bullet is currently moving
 
-    bulletImg = pygame.image.load("bullet.png")
+    bullet_icon = find_data_file("bullet.png")
+    bulletImg = pygame.image.load(bullet_icon)
     bulletX = 0
     bulletY = 480
     bulletX_change = 0
@@ -190,6 +196,9 @@ def start_game():
     global playerY
     global score_value
 
+    laser_sound = find_data_file("laser.wav")
+    explosion_sound = find_data_file("explosion.wav")
+
     # Game Loop
     running = True
     while running:
@@ -210,7 +219,7 @@ def start_game():
                     playerX_change = 5
                 if event.key == pygame.K_SPACE:
                     if bullet_state == "ready":
-                        bulletSound = mixer.Sound("laser.wav")
+                        bulletSound = mixer.Sound(laser_sound)
                         bulletSound.play()
                         # Get the current x cordinate of the spaceship
                         bulletX = playerX
@@ -250,7 +259,7 @@ def start_game():
             # Collision
             collision = isCollision(enemyX[i], enemyY[i], bulletX, bulletY)
             if collision:
-                explosionSound = mixer.Sound("explosion.wav")
+                explosionSound = mixer.Sound(explosion_sound)
                 explosionSound.play()
                 bulletY = 480
                 bullet_state = "ready"
@@ -275,10 +284,8 @@ def start_game():
 
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
-                print(event.type, pygame.KEYDOWN, event.key, pygame.K_RETURN)
                 if event.key == pygame.K_RETURN:
                     running = False
                     start_game()
-
 
 start_game()

@@ -1,6 +1,7 @@
 .vscode/
 build/
 dist/
+*.DS_Store
 *.spec
 __pycache__/
 sonos-pair/

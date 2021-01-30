@@ -6,4 +6,7 @@
 #
 
 -i https://pypi.org/simple
+cx-freeze==6.5.3
+importlib-metadata==3.4.0; python_version >= '3.6'
 pygame==2.0.1
+zipp==3.4.0; python_version >= '3.6'
