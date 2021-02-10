@@ -5,7 +5,7 @@ Command to generate the executable file on OSX
 ```shell
 python3 setup.py bdist_mac
 
-codesign --remove-signature build/space_invaders.app/Contents/MacOS/lib/Python
+codesign --remove-signature build/Space\ Invaders.app/Contents/MacOS/lib/Python
 
-cp -r build/space_invaders.app ~/Desktop
+cp -r build/Space\ Invaders.app ~/Desktop
 ```

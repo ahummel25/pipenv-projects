@@ -32,7 +32,7 @@ enemyX = []
 enemyY = []
 enemyX_change = []
 enemyY_change = []
-num_of_enemies = ""
+num_of_enemies: int
 
 # Bullet
 
@@ -50,6 +50,8 @@ bullet_state = ""
 
 score_value = ""
 font = ""
+
+game_is_over: bool
 
 textX = 10
 testY = 10
@@ -72,6 +74,7 @@ def init() -> None:
     global enemyY
     global enemyY_change
     global font
+    global game_is_over
     global num_of_enemies
     global playerX
     global playerImg
@@ -81,6 +84,8 @@ def init() -> None:
     global screen
     global textX
     global testY
+
+    game_is_over = False
 
     # create the screen
     screen = pygame.display.set_mode((800, 600))
@@ -190,6 +195,7 @@ def start_game() -> None:
     global bulletY
     global enemyX
     global enemyY
+    global game_is_over
     global playerX
     global playerX_change
     global playerY
@@ -206,10 +212,11 @@ def start_game() -> None:
         screen.fill((0, 0, 0))
         # Background Image
         screen.blit(background, (0, 0))
+
+        # if not game_is_over:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-
             # if keystroke is pressed check whether its right or left
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
@@ -223,6 +230,9 @@ def start_game() -> None:
                         # Get the current x cordinate of the spaceship
                         bulletX = playerX
                         fire_bullet(bulletX, bulletY)
+                if game_is_over and event.key == pygame.K_RETURN:
+                    running = False
+                    start_game()
 
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
@@ -239,12 +249,12 @@ def start_game() -> None:
 
         # Enemy Movement
         for i in range(num_of_enemies):
-
             # Game Over
             if enemyY[i] > 440:
                 for j in range(num_of_enemies):
                     enemyY[j] = 2000
                 game_over_text()
+                game_is_over = True
                 break
 
             enemyX[i] += enemyX_change[i]
@@ -280,12 +290,6 @@ def start_game() -> None:
         player(playerX, playerY)
         show_score(textX, testY)
         pygame.display.update()
-
-        for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN:
-                    running = False
-                    start_game()
 
 
 start_game()
