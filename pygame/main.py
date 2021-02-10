@@ -213,7 +213,6 @@ def start_game() -> None:
         # Background Image
         screen.blit(background, (0, 0))
 
-        # if not game_is_over:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
