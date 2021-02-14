@@ -11,9 +11,6 @@ from utils.files import find_data_file
 # Intialize the pygame
 pygame.init()
 
-# create the screen
-screen = ""
-
 # Background
 background = ""
 
@@ -59,6 +56,10 @@ testY = 10
 # Game Over
 over_font = pygame.font.Font("freesansbold.ttf", 64)
 
+screen = pygame.display.set_mode((800, 600))
+pygame.display.init()
+pygame.display.toggle_fullscreen()
+
 
 def init() -> None:
     global background
@@ -88,9 +89,6 @@ def init() -> None:
     game_is_over = False
 
     # create the screen
-    screen = pygame.display.set_mode((800, 600))
-    pygame.display.init()
-    pygame.display.toggle_fullscreen()
 
     # Background
     background_icon = find_data_file("background.png")
