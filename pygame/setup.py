@@ -4,7 +4,7 @@ from cx_Freeze import setup, Executable
 
 build_exe_options = dict(
     include_files=["assets"],
-    excludes=["tcl", "ttk", "tkinter", "Tkinter"],
+    excludes=["numpy", "tcl", "ttk", "tkinter", "Tkinter"],
 )
 bdist_mac_options = dict(
     iconfile="space_invaders.icns",
